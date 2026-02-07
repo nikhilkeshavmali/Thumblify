@@ -4,16 +4,25 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./globals.css";
 import LenisScroll from "./components/LenisScroll";
+import Generate from "./pages/Generate";
+import MyGeneration from "./pages/MyGeneration";
+import Preview from "./pages/Preview";
+import Login from "./components/login";
 
 export default function App() {
-    return (
-        <>
-            <LenisScroll />
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-            </Routes>
-            <Footer />
-        </>
-    );
+  return (
+    <>
+      <LenisScroll />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/generate" element={<Generate />} />
+        <Route path="/generate/:id" element={<Generate />} />
+        <Route path="/my-generation" element={<MyGeneration />} />
+        <Route path="/preview/:id" element={<Preview />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      <Footer />
+    </>
+  );
 }

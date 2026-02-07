@@ -88,6 +88,7 @@ export default function Footer() {
             Thumblify - NikhilKeshavMali
           </a>
         </p>
+        
       </motion.div>
     </footer>
   );
