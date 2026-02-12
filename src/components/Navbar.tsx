@@ -28,7 +28,7 @@ export default function Navbar() {
           <Link to="/generate" className="hover:text-pink-300 transition">
             Generate
           </Link>
-          <Link to="/my-generations" className="hover:text-pink-300 transition">
+          <Link to="/my-generation" className="hover:text-pink-300 transition">
             My Generations
           </Link>
           <Link to="#" className="hover:text-pink-300 transition">
@@ -56,7 +56,7 @@ export default function Navbar() {
         <Link onClick={() => setIsOpen(false)} to="/generate">
           Generate
         </Link>
-        <Link onClick={() => setIsOpen(false)} to="/my-generations">
+        <Link onClick={() => setIsOpen(false)} to="/my-generation">
           My Generations
         </Link>
         <Link onClick={() => setIsOpen(false)} to="#">

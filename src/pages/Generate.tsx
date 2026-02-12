@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   colorSchemes,
+  dummyThumbnails,
   type AspectRatio,
   type IThumbnail,
   type ThumbnailStyle,
@@ -10,6 +11,7 @@ import SoftBackDrop from "../components/SoftBackDrop";
 import AspectRatioSelector from "../components/AspectRatioSelector";
 import StyleSelector from "../components/StyleSelector";
 import ColorSchemeSelector from "../components/ColorSchemeSelector";
+import PreviewPanel from "../components/PreviewPanel";
 
 const Generate = () => {
   const { id } = useParams();
@@ -24,6 +26,41 @@ const Generate = () => {
   const [style, setStyle] = useState<ThumbnailStyle>("Bold & Graphic");
   const [styleDropdownOpen, setStyleDropdownOpen] = useState(false);
 
+  const handleGenerate = async () => {};
+
+  const fetchThumbnail = async () => {
+    if (id) {
+      setLoading(true);
+      const found = dummyThumbnails.find((thumbnail) => thumbnail._id === id);
+      if (found) {
+        setThumbnail(found);
+        setAdditionalDetails(found.user_prompt || "");
+        setTitle(found.title);
+        setColorSchemeId(found.color_scheme);
+
+        setAspectRatio(found.aspect_ratio as AspectRatio);
+
+        setStyle(found.style as ThumbnailStyle);
+      } else {
+        console.warn("Thumbnail not found for id:", id);
+        setThumbnail(null);
+      }
+      setLoading(false);
+    }
+  };
+
+  const validAspectRatio: AspectRatio = ["16:9", "1:1", "9:16"].includes(
+    aspectRatio,
+  )
+    ? aspectRatio
+    : "16:9";
+
+  useEffect(() => {
+    if (id) {
+      fetchThumbnail();
+    }
+  }, [id]);
+
   return (
     <>
       <SoftBackDrop />
@@ -32,7 +69,7 @@ const Generate = () => {
           <div className="grid lg:grid-cols-[400px_1fr] gap-8">
             {/* Left Section */}
             <div className={`space-y-6 ${id && "pointer-events-none"}`}>
-              <div className="p-6 rounded-2xl bg-white/8 border border-white/ 12 shadow-xl space-y-6">
+              <div className="p-6 rounded-2xl bg-white/8 border border-white/12 shadow-xl space-y-6">
                 <div>
                   <h2 className="text-xl font-bold text-zinc-100 mb-1">
                     Create Your Thumbnail
@@ -63,7 +100,7 @@ const Generate = () => {
                   </div>
                   {/* AspectRatioSelector */}
                   <AspectRatioSelector
-                    value={aspectRatio}
+                    value={validAspectRatio}
                     onChange={setAspectRatio}
                   />
                   {/* StyleSelector*/}
@@ -99,13 +136,30 @@ const Generate = () => {
                   </div>
                 </div>
                 {/*button*/}
-                <button className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed transition-colors">
-                  {loading ? "Generating..." : "Generate Thumbnail"}
-                </button>
+                {!id && (
+                  <button
+                    onClick={handleGenerate}
+                    className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {loading ? "Generating..." : "Generate Thumbnail"}
+                  </button>
+                )}
               </div>
             </div>
             {/* Right Section */}
-            <div></div>
+            <div>
+              <div className="p-6 rounded-2xl bg-white/8 border border-white/10 shadow-xl">
+                <h2 className="text-lg font-semibold text-zinc-100 mb-4">
+                  Preview
+                </h2>
+
+                <PreviewPanel
+                  thumbnail={thumbnail}
+                  isLoading={loading}
+                  aspectRatio={validAspectRatio}
+                />
+              </div>
+            </div>
           </div>
         </main>
       </div>
