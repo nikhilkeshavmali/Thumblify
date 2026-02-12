@@ -135,7 +135,7 @@ const MyGeneration = () => {
                     />
                     <Link
                       target="_blank"
-                      to={`/preview?thumbnail_url=${thumb.image_url}&title=${thumb.title}`}
+                      to={`/preview?thumbnail_url=${encodeURIComponent(thumb.image_url!)}&title=${encodeURIComponent(thumb.title)}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <ArrowUpRightIcon className="size-7 bg-black/60 p-1.5 rounded-md hover:bg-pink-600 cursor-pointer transition-colors" />
