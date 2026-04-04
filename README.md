@@ -50,7 +50,7 @@ frontend/
 ⚡ Setup Instructions
 Backend Setup (Node.js + Express)
 Clone the repo
-git clone https://github.com/yourusername/thumblify.git
+git clone https://github.com/nikhilkeshavmali/thumblify.git
 cd thumblify/backend
 Install dependencies
 npm install
