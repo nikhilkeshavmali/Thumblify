@@ -1,19 +1,20 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
-import connectDB from "./configs/db.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import dns from "node:dns/promises";
 import { v2 as cloudinary } from "cloudinary";
 
-import AuthRouter from "./routes/AuthRoutes.js";
-import ThumbnailRouter from "./routes/ThumbnailRoutes.js";
-import UserRouter from "./routes/UserRoutes.js";
+import connectDB from "./configs/db";
+import AuthRouter from "./routes/AuthRoutes";
+import ThumbnailRouter from "./routes/ThumbnailRoutes";
+import UserRouter from "./routes/UserRoutes";
 
-// ✅ Force Google DNS (fixes some network issues)
+// ✅ Force Google DNS (fix network issues sometimes)
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
+// ✅ Extend session types
 declare module "express-session" {
   interface SessionData {
     isLoggedIn: boolean;
@@ -21,7 +22,7 @@ declare module "express-session" {
   }
 }
 
-// ✅ Validate required environment variables
+// ✅ Validate required ENV variables
 const requiredEnvVars = [
   "MONGODB_URI",
   "SESSION_SECRET",
@@ -38,8 +39,9 @@ for (const envVar of requiredEnvVars) {
   }
 }
 
-(async () => {
+const startServer = async () => {
   try {
+    // ✅ Connect MongoDB
     await connectDB();
 
     // ✅ Configure Cloudinary
@@ -51,6 +53,7 @@ for (const envVar of requiredEnvVars) {
 
     const app = express();
 
+    // ✅ CORS
     app.use(
       cors({
         origin: ["http://localhost:5173", "http://localhost:3000"],
@@ -58,14 +61,18 @@ for (const envVar of requiredEnvVars) {
       }),
     );
 
+    // ✅ JSON Middleware
     app.use(express.json());
 
+    // ✅ Session
     app.use(
       session({
         secret: process.env.SESSION_SECRET as string,
         resave: false,
         saveUninitialized: false,
-        cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+        cookie: {
+          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        },
         store: MongoStore.create({
           mongoUrl: process.env.MONGODB_URI as string,
           collectionName: "sessions",
@@ -73,10 +80,12 @@ for (const envVar of requiredEnvVars) {
       }),
     );
 
+    // ✅ Health Route
     app.get("/", (req: Request, res: Response) => {
-      res.send("Server is Live!");
+      res.send("🚀 Server is Live!");
     });
 
+    // ✅ API Routes
     app.use("/api/auth", AuthRouter);
     app.use("/api/thumbnail", ThumbnailRouter);
     app.use("/api/user", UserRouter);
@@ -84,10 +93,12 @@ for (const envVar of requiredEnvVars) {
     const port = process.env.PORT || 3000;
 
     app.listen(port, () => {
-      console.log(`✅ Server is running at http://localhost:${port}`);
+      console.log(`✅ Server running at http://localhost:${port}`);
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error);
     process.exit(1);
   }
-})();
+};
+
+startServer();

@@ -2,7 +2,7 @@ import express from "express";
 import {
   getThumbnailbyId,
   getUsersThumbnails,
-} from "../controllers/UserController.js";
+} from "../controllers/UserController";
 
 const UserRouter = express.Router();
 

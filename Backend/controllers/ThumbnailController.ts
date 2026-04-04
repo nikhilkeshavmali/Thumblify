@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Thumbnail from "../models/Thumbnail.js";
+import Thumbnail from "../models/Thumbnail";
 import axios from "axios";
 import path from "path";
 import fs from "fs";

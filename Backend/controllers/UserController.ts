@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import Thumbnail from "../models/Thumbnail.js";
+import Thumbnail from "../models/Thumbnail";
 
 // Controllers to get all user Thumbnails
 export const getUsersThumbnails = async (req: Request, res: Response) => {
