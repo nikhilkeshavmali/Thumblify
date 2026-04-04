@@ -29,7 +29,7 @@ const requiredEnvVars = [
   "CLOUDINARY_CLOUD_NAME",
   "CLOUDINARY_API_KEY",
   "CLOUDINARY_API_SECRET",
-  "HF_TOKEN",
+  "GEMINI_API_KEY", // ✅ replaced HF_TOKEN with GEMINI_API_KEY
 ] as const;
 
 for (const envVar of requiredEnvVars) {
